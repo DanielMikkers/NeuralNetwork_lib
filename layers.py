@@ -1,96 +1,97 @@
-from tensor import Tensor
-from typing import Dict, Union, Tuple
-from activation import activefunc
+from numpy import ndarray as Tensor
 import numpy as np
+from activation import ActivationFunction
+from typing import Tuple, Union
+import copy
 
-class Layer:
-    def __init__(self) -> None:
-        self.params: Dict[str, Tensor] = {}
-        self.grads: Dict[str, Tensor] = {}
+class Layer(object):
+    def set_input_shape(self, shape: Tuple):
+        self.input_shape = shape
+    
+    def layer_name(self):
+        return self.__class__.__name__
+    
+    def parameters(self):
+        return 0
 
-    def forward(self, inputs: Tensor) -> Tensor:
+    def forward(self, x: Tensor, training: bool):
         raise NotImplementedError
     
-    def backward(self, grad: Tensor) -> Tensor:
+    def backward(self, x: Tensor, accum_grad):
         raise NotImplementedError
     
-class Linear(Layer):
-
-    def forward(self, inputs: Tensor) -> Tensor:
-        self.inputs = inputs
-        return inputs @ self.params["w"] + self.params["b"]
+    def output_shape(self):
+        raise NotImplementedError
     
-    def backward(self, grad: Tensor) -> Tensor:
-        self.grads["b"] = np.sum(grad, axis=0)
-        self.grads["w"] = self.inputs.T @ grad
-
-        return grad @ self.params["w"]
+activation_function = {
+    'softmax': (ActivationFunction.softmax, ActivationFunction.softmax_grad),
+    'sigmoid': (ActivationFunction.sigmoid, ActivationFunction.sigmoid_grad),
+    'tanh': (ActivationFunction.tanh, ActivationFunction.tanh_grad),
+    'relu': (ActivationFunction.relu, ActivationFunction.relu_grad),
+    'leaky': (ActivationFunction.leakyRelu, ActivationFunction.leakyRelu_grad),
+    'linear': (ActivationFunction.linear, ActivationFunction.linear_grad),
+    'elu': (ActivationFunction.elu, ActivationFunction.elu_grad),
+    'silu': (ActivationFunction.silu, ActivationFunction.silu_grad),
+    'softplus': (ActivationFunction.softplus, ActivationFunction.softplus_grad),
+    'softsign': (ActivationFunction.softsign, ActivationFunction.softsign_grad)
+}
 
 class Dense(Layer):
-    def __init__(self, units: int, activation: str = 'relu', input_shape: Union[Tuple[int],None] = None) -> None:
-        super().__init__()
-
-        self.units = units
-        self.activation = activation
+    def __init__(self, units: int, activation: str = 'linear', input_shape: Union[Tuple[int],None] = None) -> None:
+        self.layer_input = None
         self.input_shape = input_shape
-        self.need_input_shape = input_shape is None
-        self.f, self.f_prime = self.func(activation)
+        self.units = units
+        self.trainable = True
+        self.w = None
+        self.b = None
+        self.activation_name = activation
 
-        self.params["w"] = None
-        self.params["b"] = None
+    def initialize(self, optimizer) -> None:
+        limit = 1/ np.sqrt(self.input_shape[0])
+        self.w = np.random.uniform(-limit,limit, (self.input_shape[0], self.units))
+        self.b = np.zeros((1,self.units))
 
+        self.w_opt = copy.copy(optimizer)
+        self.b_opt = copy.copy(optimizer)
 
-    def func(self, activation: str) -> Tuple[function]:
-        self.active_func = {
-            'tanh': (activefunc.tanh, activefunc.tanh_prime),
-            'sigmoid': (activefunc.sigmoid, activefunc.sigmoid_prime),
-            'relu': (activefunc.ReLU, activefunc.ReLU_prime),
-            'prelu': (activefunc.pReLU, activefunc.pReLu_prime),
-            'softmax': (activefunc.softmax, activefunc.softmax_prime)
-        }
+        self.activation_func, self.activation_grad = activation_function[self.activation_name]
 
-        if activation in self.active_func:
-            self.activation_function = self.active_func[activation]
-            return self.activation_function
-        else:
-            raise ValueError("Unknown activation function called: {}".format(activation))
-
-    def linear(self, inputs: Tensor) -> Tensor:
-        return inputs @ self.params["w"] + self.params["b"]
+    def parameters(self):
+        return np.prod(np.shape(self.w)) + np.prod(np.shape(self.b))
     
-    def forward(self, inputs: Tensor) -> Tensor:
-        if self.params["w"] is None:
-            input_shape = input.shape[1:]
-            self.params["w"] = np.random.randn(np.prod(input_shape), self.units)
-            self.params["b"] = np.random.randn(self.units)
-        self.inputs = inputs
-        z = self.linear(inputs)
-        return self.f(z)
+    def forward(self, inputs: Tensor, training: bool = True) -> Tensor:
+        self.layer_input = inputs
+        output = inputs.dot(self.w) + self.b
+        return self.activation_func(output)
     
     def backward(self, grad: Tensor) -> Tensor:
-        grad = grad * self.activation(self.inputs, derivative=True)
-        self.grads["b"] = np.sum(grad, axis=0)
-        self.grads["w"] = self.inputs.T @ grad
-        return grad @ self.params["w"] 
+        w = self.w
 
+        if self.trainable:
+            grad_w = self.layer_input.T.dot(grad)
+            grad_b = np.sum(grad)
+            
+            self.w = self.w_opt.update(self.w, grad_w)
+            self.b = self.b_opt.update(self.b, grad_b)
+        
+        grad = grad.dot(w.T)
+        return grad * self.activation_grad(self.layer_input)
+    
+    def output_shape(self):
+        return (self.units,)
+    
+class Activation(Layer):
+    def __init__(self, name: str = 'linear') -> None:
+        self.activation_name = name
+        self.activation_func, self.activation_grad = activation_function[name]
+        self.trainable = True
 
-#class Activation(Layer):
-#    def __init__(self, f: F, f_prime: F) -> None:
-#        super().__init__()
-#        self.f = f
-#        self.f_prime = f_prime
-#    
-#    def forward(self, inputs: Tensor) -> Tensor:
-#        self.inputs = inputs
-#        return self.f(inputs)
-#    
-#    def backward(self, grad: Tensor) -> Tensor:
-#        return self.f_prime(self.inputs) * grad
-#
-#class Dense(Layer):
-#    def backward(self, grad: Tensor) -> Tensor:
-#        grad = grad * self.activation(self.inputs, derivative=True)
-#        self.grads["b"] = np.sum(grad, axis=0)
-#        self.grads["w"] = self.inputs.T @ grad
-#        return grad @ self.params["w"]
-#    
+    def forward(self, x: Tensor, training: bool) -> Tensor:
+        self.layer_input = x
+        return self.activation_func(x)
+    
+    def backward(self, grad: Tensor) -> Tensor:
+        return grad * self.activation_grad(self.layer_input)
+    
+    def output_shape(self):
+        return self.input_shape
