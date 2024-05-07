@@ -52,7 +52,7 @@ class ActivationFunction:
     def silu_grad(self, x: Tensor, **kwargs) -> Tensor: 
         return self.sigmoid(x) + x*self.sigmoid_grad(x)
     
-    def sofplus(self, x: Tensor, **kwargs) -> Tensor:
+    def softplus(self, x: Tensor, **kwargs) -> Tensor:
         return np.log(np.exp(x) + 1)
     
     def softplus_grad(self, x: Tensor, **kwargs) -> Tensor:
