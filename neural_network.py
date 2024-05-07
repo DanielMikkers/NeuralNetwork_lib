@@ -97,7 +97,7 @@ class Sequential:
             loss_grad = layer.backward(loss_grad)
 
     def summary(self, name: str = "Model"):
-        print(AsciiTable([[name]].table))
+        print(AsciiTable([[name]]).table)
         
         table_data = [["Layer (type)", "Output Shape", "Params"]]
         tot_params = 0
