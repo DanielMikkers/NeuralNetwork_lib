@@ -1,6 +1,5 @@
 from numpy import ndarray as Tensor
 import numpy as np
-from neural_network import Sequential
     
 class SGD():
     def __init__(self, learning_rate: float = 0.01, momentum: float = 0.1) -> None:
