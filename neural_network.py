@@ -4,6 +4,7 @@ import numpy as np
 import tqdm
 from utils import batch_iterator, shuffle_data
 from terminaltables import AsciiTable
+from optimizer import SGD
 import time
 
 loss_functions = {
@@ -11,9 +12,13 @@ loss_functions = {
     'cross_entropy': (CrossEntropy.loss, CrossEntropy.accuracy, CrossEntropy.gradient)
 }
 
+optimizer_dict = {
+    'SGD': SGD
+}
+
 class Sequential:
-    def __init__(self, optimizer, loss, validation = None, shuffle=False) -> None:
-        self.optimizer = optimizer
+    def __init__(self, optimizer: str = 'SGD', loss: str = 'mean_square_error', validation = None, shuffle = False) -> None:
+        self.optimizer = optimizer_dict[optimizer]
         self.layers = []
         self.errors = {"training": [], "validation": []}
         self.acc = {"training": [], "validation": []}
@@ -91,7 +96,7 @@ class Sequential:
         for layer in reversed(self.layers):
             loss_grad = layer.backward(loss_grad)
 
-    def summary(self, name="Model"):
+    def summary(self, name: str = "Model"):
         print(AsciiTable([[name]].table))
         
         table_data = [["Layer (type)", "Output Shape", "Params"]]
@@ -109,3 +114,9 @@ class Sequential:
     
     def predict(self, x):
         return self._forward(x, traning=False)
+    
+    def save_weights(self, file_name: str):
+        return 0
+    
+    def import_weights(self, file_name: str):
+        return 0

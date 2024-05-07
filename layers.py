@@ -80,6 +80,9 @@ class Dense(Layer):
     def output_shape(self):
         return (self.units,)
     
+    def final_weights(self):
+        return self.w, self.b
+    
 class Activation(Layer):
     def __init__(self, name: str = 'linear') -> None:
         self.activation_name = name
