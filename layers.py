@@ -79,22 +79,100 @@ class Dense(Layer):
     
     def output_shape(self):
         return (self.units,)
-    
-    def final_weights(self):
-        return self.w, self.b
-    
-class Activation(Layer):
-    def __init__(self, name: str = 'linear') -> None:
-        self.activation_name = name
-        self.activation_func, self.activation_grad = activation_function[name]
-        self.trainable = True
 
-    def forward(self, x: Tensor, training: bool) -> Tensor:
-        self.layer_input = x
-        return self.activation_func(x)
+class RNN(Layer):
+    def __init__(self, units: int, activation: str = 'linear', input_shape: Union[Tuple[int],None] = None) -> None:
+        self.layer_input = None
+        self.input_shape = input_shape
+        self.units = units
+        self.trainable = True
+        self.w = None
+        self.b = None
+        self.activation_name = activation
     
-    def backward(self, grad: Tensor) -> Tensor:
-        return grad * self.activation_grad(self.layer_input)
+class LSTM(Layer):
+    def __init__(self, units: int, activation: str = 'linear', input_shape: Union[Tuple[int],None] = None) -> None:
+        self.layer_input = None
+        self.input_shape = input_shape
+        self.units = units
+        self.trainable = True
+        self.w = None
+        self.b = None
+        self.activation_name = activation
+
+class Attention(Layer):
+    def one():
+        return 1
+
+class AveragePooling1D(Layer):
+    def one():
+        return 1
     
-    def output_shape(self):
-        return self.input_shape
+class AveragePooling2D(Layer):
+    def one():
+        return 1
+    
+class AveragePooling3D(Layer):
+    def one():
+        return 1
+    
+class BatchNormalization(Layer):
+    def one():
+        return 1
+
+class Conv1D(Layer):
+    def one():
+        return 1
+
+class Conv2D(Layer):
+    def one():
+        return 1
+
+class ConvLSTM1D(Layer):
+    def one():
+        return 1
+    
+class ConvLSTM2D(Layer):
+    def one():
+        return 1
+    
+class ConvLSTM3D(Layer):
+    def one():
+        return 1
+    
+class Dropout(Layer):
+    def one():
+        return 1
+
+class Embedding(Layer):
+    def one():
+        return 1
+
+class Flatten(Layer):
+    def one():
+        return 1
+
+class GRU(Layer):
+    def one():
+        return 1
+
+class MaxPooling1D(Layer):
+    def one():
+        return 1
+
+class MaxPooling2D(Layer):
+    def one():
+        return 1
+
+class MaxPooling3D(Layer):
+    def one():
+        return 1
+
+class MultiHeadAttention(Layer):
+    def one():
+        return 1
+
+class SimpleRNN(Layer):
+    def one():
+        return 1
+
