@@ -91,14 +91,8 @@ class RNN(Layer):
         self.activation_name = activation
     
 class LSTM(Layer):
-    def __init__(self, units: int, activation: str = 'linear', input_shape: Union[Tuple[int],None] = None) -> None:
-        self.layer_input = None
-        self.input_shape = input_shape
-        self.units = units
-        self.trainable = True
-        self.w = None
-        self.b = None
-        self.activation_name = activation
+    def one():
+        return 1
 
 class Attention(Layer):
     def one():
