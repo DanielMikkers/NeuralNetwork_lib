@@ -72,17 +72,19 @@ class Dense(Layer):
         return self.activation_func(output)
     
     def backward(self, grad):
-        w = self.w
+        w = copy(self.w)
+
+        grad_z = grad * self.activation_grad(self.layer_input)
 
         if self.trainable:
-            grad_w = self.layer_input.T.dot(grad)
-            grad_b = np.sum(grad)
+            grad_w = self.layer_input.T.dot(grad_z)
+            grad_b = np.sum(grad_z, axis=0, keepdims=True)
             
             self.w = self.w_opt.update(self.w, grad_w)
             self.b = self.b_opt.update(self.b, grad_b)
         
-        grad = grad.dot(w.T)
-        return grad * self.activation_grad(self.layer_input)
+        grad = grad_z.dot(w.T)
+        return grad
     
     def output_shape(self):
         return (self.units,)
@@ -157,19 +159,19 @@ class RNN(Layer):
         grad_b = np.zeros_like(self.b)
         grad_c = np.zeros_like(self.c)
 
-        fut_grad = np.zeros_like(grad)
+        next_grad = np.zeros_like(grad)
 
         for t in reversed(range(timesteps)):
             grad_V += grad[:, t].T.dot(self.states)
             grad_c += grad[:, t]
 
             grad_state = grad[:, t].dot(self.V) * self.activation_grad(self.state_input[:, t])
-            fut_grad[:, t] = grad_state * grad_state.dot(self.U)
+            next_grad[:, t] = grad_state.dot(self.U)
 
             for t_ in reversed(np.arange(max(0, t - self.bptt_trunc), t+1)):
                 grad_U += grad_state.T.dot(self.layer_input[:, t_])
                 grad_W += grad_state.T.dot(self.states[:, t_-1])
-                grad_b += grad_state
+                grad_b += np.sum(grad_state, axis=0)
 
                 grad_state = grad_state.dot(self.W) * self.activation_grad(self.state_input[:, t_-1])
         
@@ -180,89 +182,7 @@ class RNN(Layer):
             self.b = self.b_opt.update(self.b, grad_b)
             self.c = self.c_opt.update(self.c, grad_c)
 
-        return fut_grad
+        return next_grad
 
     def output_shape(self):
         return self.input_shape
-
-
-class LSTM(Layer):
-    def one():
-        return 1
-
-class Attention(Layer):
-    def one():
-        return 1
-
-class AveragePooling1D(Layer):
-    def one():
-        return 1
-    
-class AveragePooling2D(Layer):
-    def one():
-        return 1
-    
-class AveragePooling3D(Layer):
-    def one():
-        return 1
-    
-class BatchNormalization(Layer):
-    def one():
-        return 1
-
-class Conv1D(Layer):
-    def one():
-        return 1
-
-class Conv2D(Layer):
-    def one():
-        return 1
-
-class ConvLSTM1D(Layer):
-    def one():
-        return 1
-    
-class ConvLSTM2D(Layer):
-    def one():
-        return 1
-    
-class ConvLSTM3D(Layer):
-    def one():
-        return 1
-    
-class Dropout(Layer):
-    def one():
-        return 1
-
-class Embedding(Layer):
-    def one():
-        return 1
-
-class Flatten(Layer):
-    def one():
-        return 1
-
-class GRU(Layer):
-    def one():
-        return 1
-
-class MaxPooling1D(Layer):
-    def one():
-        return 1
-
-class MaxPooling2D(Layer):
-    def one():
-        return 1
-
-class MaxPooling3D(Layer):
-    def one():
-        return 1
-
-class MultiHeadAttention(Layer):
-    def one():
-        return 1
-
-class SimpleRNN(Layer):
-    def one():
-        return 1
-
