@@ -161,6 +161,26 @@ class RNN(Layer):
 
         for t in reversed(range(timesteps)):
             grad_V += grad[:, t].T.dot(self.states)
+            grad_c += grad[:, t]
+
+            grad_state = grad[:, t].dot(self.V) * self.activation_grad(self.state_input[:, t])
+            fut_grad[:, t] = grad_state * grad_state.dot(self.U)
+
+            for t_ in reversed(np.arange(max(0, t - self.bptt_trunc), t+1)):
+                grad_U += grad_state.T.dot(self.layer_input[:, t_])
+                grad_W += grad_state.T.dot(self.states[:, t_-1])
+                grad_b += grad_state
+
+                grad_state = grad_state.dot(self.W) * self.activation_grad(self.state_input[:, t_-1])
+        
+        self.U = self.U_opt.update(self.U, grad_U)
+        self.V = self.V_opt.update(self.V, grad_V)
+        self.W = self.W_opt.update(self.W, grad_W)
+        if self.bias is True:
+            self.b = self.b_opt.update(self.b, grad_b)
+            self.c = self.c_opt.update(self.c, grad_c)
+
+        return fut_grad
 
     def output_shape(self):
         return self.input_shape
