@@ -3,7 +3,7 @@
 ## ToDo's
 | TODO Layers | | | |
 | --------- | --------- | --------- | --------- |
-| Code Dense Layer | X | Comment Dense Layer | | 
+| Code Dense Layer | X | Comment Dense Layer | X | 
 | Code RNN Layer | X | Comment RNN Layer | |
 | Code LSTM Layer | | Comment LSTM Layer | | 
 | Code GRU Layer | | Comment GRU Layer | |
@@ -28,10 +28,13 @@
 | TODO NN | | | |
 | --------- | --------- | --------- | --------- |
 | Code KNN | | Comment KNN | |
+| Code Physics informed NN | | Comment Physics informed NN | |
 | Code Q-learning | | Comment Q-Learning | |
-| Code LLM for trading | | Comment LLM for trading | |
+| Code LLM | | Comment LLM | |
 | Code Linear Regression model | | Comment Linear Regression model | |
 | Code fitting model | | Comment fitting model | |
+
+NOTE: look into econometrics or finance informed machine learning / neural networks.
 
 ## Introduction
 Let me define a few things first:
@@ -58,6 +61,10 @@ Then the weights $W$ and the bias $\mathbf{b}$ (if bias is turned on) are update
 
 ## Recurrent Neural Network (RNN) Layer
 
+An RNN can learn on timeseries like data. 
 
+<p align="center">
+<img src="https://github.com/DanielMikkers/NeuralNetwork_lib/blob/main/RNN.png" width="60%" height="60%">
+</p>
 
 ## Long-Short-Term-Memory (LSTM) Layer
