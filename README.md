@@ -61,10 +61,30 @@ Then the weights $W$ and the bias $\mathbf{b}$ (if bias is turned on) are update
 
 ## Recurrent Neural Network (RNN) Layer
 
-An RNN can learn on timeseries like data. 
+An RNN can learn on timeseries like data. The architechture of an RNN is given in the figure below.
 
 <p align="center">
-<img src="https://github.com/DanielMikkers/NeuralNetwork_lib/blob/main/RNN.png" width="60%" height="60%">
+<img src="https://github.com/DanielMikkers/NeuralNetwork_lib/blob/main/RNN.png" width="50%" height="50%">
 </p>
+
+Let me define the following
+
+$$\boldsymbol{a}^{(t)} = \mathbf{b} + W \boldsymbol{h}^{(t-1)} + U \mathbf{x} $$
+$$\boldsymbol{h}^{(t)} = f(\boldsymbol{a}^{(t)})$$
+$$\boldsymbol{o}^{(t)} = \mathbf{c} + V \boldsymbol{h}^{(t)}$$
+
+Then computing the gradients:
+
+$$\nabla_{\mathbf{b}} L = \sum_t \boldsymbol{h}'^{(t)} \nabla_{\boldsymbol{h}^{(t)}} L$$
+$$\nabla_{\mathbf{c}} L = \sum_t \nabla_{\boldsymbol{o}^{(t)}} L$$
+$$\nabla_{U} L = \sum_t \boldsymbol{h}'^{(t)} \left(\nabla_{\boldsymbol{h}^{(t)}} L \right) \mathbf{x}^T$$
+$$\nabla_{V} L = \sum_t \boldsymbol{h}'^{(t)} \left(\nabla_{\boldsymbol{h}^{(t)}} L \right) \boldsymbol{h}^{(t-1),T}$$
+$$\nabla_{W} L = \sum_t (\nabla_{\boldsymbol{o}^{(t)}} L) \boldsymbol{h}^{(t),T}$$
+
+The gradient w.r.t. $\boldsymbol{o}^{(t)}$ is the 'regular' gradient of $L$. The gradient w.r.t. $\boldsymbol{h}^{(t)}$ is given by
+
+$$\nabla_{\boldsymbol{h}^{(t)}} L = \boldsymbol{h}^{(t)} (\nabla_{\boldsymbol{o}^{(t)}} L) \cdot V $$
+
+The gradient for the next layer is 
 
 ## Long-Short-Term-Memory (LSTM) Layer
