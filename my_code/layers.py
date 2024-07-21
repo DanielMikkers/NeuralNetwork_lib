@@ -63,7 +63,7 @@ class Dense(Layer):
         else:
             return np.prod(np.shape(self.w)) + np.prod(np.shape(self.b))
     
-    def forward(self, inputs, training = True):
+    def forward(self, inputs):
         self.layer_input = inputs
         if self.bias is False:
             output = inputs.dot(self.w)

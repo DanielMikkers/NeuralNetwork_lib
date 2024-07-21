@@ -51,9 +51,13 @@ Let me define a few things first:
 ### Maths
 A dense layer is just a simple layer for a NN. Let $\mathbf{x}$ be the input of the dense layer. Then the output of the dense layer $\mathbf{o}$ is given by (when a bias is present):
 
-$$\boldsymbol{o} = \boldsymbol{h}(\mathbf{x} W + \mathbf{b}).$$
+$$\boldsymbol{o} = \boldsymbol{h}( W \mathbf{x} + \mathbf{b}),$$
 
-This was the forward pass. Now we need to do the backward pass and update the weights. The gradient of the weight $W$ is then
+where $W$ are some weights and $\mathbf{b}$ is a bias. This is the forward pass of a dense layer. 
+
+The weights $W$ are initialized by taking a random matrix with dimensions ($N$, units), where $N$ is the first dimension of the input shape, which is the ???????? for the first layer and the number of units for next layers. The random matrix is drawn from the uniform distribution $\text{UNIF}(-\frac{1}{\sqrt{\text{N}}}, \frac{1}{\sqrt{\text{N}}})$.
+
+Now we need to do the backward pass and update the weights. The gradient of the weight $W$ is then
 
 $$\nabla_W L = \frac{\partial L}{\partial W} = \frac{\partial \boldsymbol{o}}{\partial W} \frac{\partial L}{\partial \boldsymbol{o}} = \mathbf{x}^T \boldsymbol{h}'(\mathbf{z}) \nabla_{\boldsymbol{o}} L$$
 
@@ -67,8 +71,8 @@ Then the weights $W$ and the bias $\mathbf{b}$ (if bias is turned on) are update
 The code has been checked by comparing the loss and accuracy with a TensorFlow/Keras model. The architecture was as follows:
 
 1. Flattening layer with input shape (32,32,3)
-2. Dense (hidden) layer with ReLU as activation function and 16 nodes
-3. Dense (output) Layer with softmax as activation function and 10 nodes, one for each class.
+2. Dense (hidden) layer with ReLU as activation function and 16 units
+3. Dense (output) Layer with softmax as activation function and 10 units, one for each class.
 
 The models were trained on the cifar10 dataset from TensorFlow. The models ran for 5 epochs. The loss for each epoch were quite similar. The accuracy of the TensorFlow model was slightly more consistent for each test round and performed generally sligtly better. The accuracy of the TensorFlow model was, after 5 epochs, between $0.08$ and $0.11$. My model performed less consistent and showed accuracies ranging from $0.01$ to $0.10$.
 

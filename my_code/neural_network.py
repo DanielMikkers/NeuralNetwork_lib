@@ -55,7 +55,7 @@ class Sequential:
         return loss, accuracy
     
     def train_batch(self, x, y_true):
-        y_pred = self._forward(x, train = False)
+        y_pred = self._forward(x)
         
         loss = np.mean(self.loss_func(y_true, y_pred))
         accuracy = np.sum(y_true == y_pred, axis=0) / len(y_true)
@@ -95,10 +95,10 @@ class Sequential:
         return self.errors["training"], self.errors["validation"], self.acc["training"], self.acc["validation"]
 
     
-    def _forward(self, x, train=True):
+    def _forward(self, x):
         layer_output = x
         for layer in self.layers:
-            layer_output = layer.forward(layer_output, train)
+            layer_output = layer.forward(layer_output)
 
         return layer_output
     
@@ -125,7 +125,7 @@ class Sequential:
         print("Total paramaters: %d \n" % tot_params)
     
     def predict(self, x):
-        return self._forward(x, traning=False)
+        return self._forward(x)
     
     def save_weights(self, file_name: str):
         return 0
