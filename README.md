@@ -1,7 +1,7 @@
 # Neural Network
 
 ## ToDo's
-| TODO Layers | | | |
+| TODO Layers | | | | | |
 | --------- | --------- | --------- | --------- | --------- | --------- |
 | Code Dense Layer | X | Comment Dense Layer | X | Check correctness with TF | |
 | Code RNN Layer | X | Comment RNN Layer | | Check correctness with TF | |
