@@ -3,7 +3,7 @@
 ## ToDo's
 | TODO Layers | | | | | |
 | --------- | --------- | --------- | --------- | --------- | --------- |
-| Code Dense Layer | X | Comment Dense Layer | X | Check correctness with TF | |
+| Code Dense Layer | X | Comment Dense Layer | X | Check correctness with TF | X |
 | Code RNN Layer | X | Comment RNN Layer | | Check correctness with TF | |
 | Code LSTM Layer | | Comment LSTM Layer | | Check correctness with TF | |
 | Code GRU Layer | | Comment GRU Layer | | Check correctness with TF | |
