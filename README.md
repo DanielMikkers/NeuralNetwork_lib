@@ -1,38 +1,38 @@
 # Neural Network
 
 ## ToDo's
-| TODO Layers | | | | | |
-| --------- | --------- | --------- | --------- | --------- | --------- |
-| Code Dense Layer | X | Comment Dense Layer | X | Check correctness with TF | X |
-| Code RNN Layer | X | Comment RNN Layer | | Check correctness with TF | |
-| Code LSTM Layer | | Comment LSTM Layer | | Check correctness with TF | |
-| Code GRU Layer | | Comment GRU Layer | | Check correctness with TF | |
-| Code Conv1D Layer | | Comment Conv1D Layer | | Check correctness with TF | |
-| Code Conv2D Layer | | Comment Conv2D Layer | | Check correctness with TF | |
-| Code ConvLSTM 1D Layer | | Comment ConvLSTM 1D Layer | | Check correctness with TF | |
-| Code ConvLSTM 2D Layer | | Comment ConvLSTM 2D Layer | | Check correctness with TF | |
-| Code ConvLSTM 3D Layer | | Comment ConvLSTM 3D Layer | | Check correctness with TF | |
-| Code AveragePooling1D Layer | | Comment AveragePooling1D Layer | | Check correctness with TF | |
-| Code AveragePooling2D Layer | | Comment AveragePooling2D Layer | | Check correctness with TF | |
-| Code AveragePooling3D Layer | | Comment AveragePooling3D Layer | | Check correctness with TF | |
-| Code MaxPooling1D Layer | | Comment MaxPooling1D Layer | | Check correctness with TF | |
-| Code MaxPooling2D Layer | | Comment MaxPooling2D Layer | | Check correctness with TF | |
-| Code MaxPooling3D Layer | | Comment MaxPooling3D Layer | | Check correctness with TF | |
-| Code Dropout Layer | | Comment Dropout Layer | | Check correctness with TF | |
-| Code Flatten Layer | | Comment Flatten Layer | | Check correctness with TF | |
-| Code Embedding Layer | | Comment Embedding Layer | | Check correctness with TF | |
-| Code Attention Layer | | Comment Attention Layer | | Check correctness with TF | |
-| Code MutliHeadAttention Layer | | Comment MultiHeadAttention Layer | | Check correctness with TF | |
-| Code BatchNormalization Layer | | Comment BatchNormalization Layer | | Check correctness with TF | |
+| | Code | Comment | Check correctness with TF |
+| --------- | --------- | --------- | --------- |
+| Dense Layer | X | X | X |
+| RNN Layer | X | | |
+| LSTM Layer | | | |
+| GRU Layer | | |
+| Conv1D Layer | | |
+| Conv2D Layer | | |
+| ConvLSTM 1D Layer | | |
+| ConvLSTM 2D Layer | | |
+| ConvLSTM 3D Layer | | |
+| AveragePooling1D Layer | | |
+| AveragePooling2D Layer | | |
+| AveragePooling3D Layer | | |
+| MaxPooling1D Layer | | |
+| MaxPooling2D Layer | | |
+| MaxPooling3D Layer | | |
+| Dropout Layer | | |
+| Flatten Layer | | |
+| Embedding Layer | | |
+| Attention Layer | | |
+| MutliHeadAttention Layer | | |
+| BatchNormalization Layer | | |
 
-| TODO NN | | | | | |
-| --------- | --------- | --------- | --------- | --------- | --------- |
-| Code KNN | | Comment KNN | | Check correctness with TF | |
-| Code Physics informed NN | | Comment Physics informed NN | | Check correctness with TF | |
-| Code Q-learning | | Comment Q-Learning | | Check correctness with TF | |
-| Code LLM | | Comment LLM | | Check correctness with TF | |
-| Code Linear Regression model | | Comment Linear Regression model | | Check correctness with TF | |
-| Code fitting model | | Comment fitting model | | Check correctness with TF | |
+| | Code | Comment | Check correctness with TF| 
+| --------- | --------- | --------- | --------- |
+| KNN | | |
+| Physics informed NN | | |
+| Q-learning | | |
+| LLM | | |
+| Linear Regression model | | |
+| fitting model | | |
 
 NOTE: look into econometrics or finance informed machine learning / neural networks.
 
