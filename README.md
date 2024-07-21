@@ -1,7 +1,7 @@
 # Neural Network
 
 ## ToDo's
-| | Code | Comment | Check correctness with TF |
+| Layer Type | Code | Comment | Check correctness with TF |
 | --------- | --------- | --------- | --------- |
 | Dense Layer | X | X | X |
 | RNN Layer | X | | |
@@ -25,7 +25,7 @@
 | MutliHeadAttention Layer | | |
 | BatchNormalization Layer | | |
 
-| | Code | Comment | Check correctness with TF| 
+| Model Type | Code | Comment | Check correctness with TF| 
 | --------- | --------- | --------- | --------- |
 | KNN | | |
 | Physics informed NN | | |
@@ -47,6 +47,8 @@ Let me define a few things first:
 - In the code I will call $\nabla_{\boldsymbol{o}} L$: ```grad```;
 
 ## Dense Layer
+
+### Maths
 A dense layer is just a simple layer for a NN. Let $\mathbf{x}$ be the input of the dense layer. Then the output of the dense layer $\mathbf{o}$ is given by (when a bias is present):
 
 $$\boldsymbol{o} = \boldsymbol{h}(\mathbf{x} W + \mathbf{b}).$$
@@ -57,7 +59,20 @@ $$\nabla_W L = \frac{\partial L}{\partial W} = \frac{\partial \boldsymbol{o}}{\p
 
 $$\nabla_\mathbf{b} L = \frac{\partial L}{\partial \mathbf{b}} = \frac{\partial \boldsymbol{o}}{\partial \mathbf{b}} \frac{\partial L}{\partial \boldsymbol{o}} = \boldsymbol{h}'(\mathbf{z}) \nabla_{\boldsymbol{o}} L$$
 
-Then the weights $W$ and the bias $\mathbf{b}$ (if bias is turned on) are updated by the updating rule of the specific optimizer. The function of the backward pass returns $\left(\boldsymbol{h}'(\mathbf{z}) \nabla_{\boldsymbol{o}} L \right) \cdot W^T$, since this is the derivative w.r.t. the input $\mathbf{x}$. 
+The function of the backward pass returns $\left(\boldsymbol{h}'(\mathbf{z}) \nabla_{\boldsymbol{o}} L \right) \cdot W^T$, since this is the derivative w.r.t. the input $\mathbf{x}$. 
+
+Then the weights $W$ and the bias $\mathbf{b}$ (if bias is turned on) are updated by the updating rule of the specific optimizer.
+
+### Comparing with TensorFlow
+The code has been checked by comparing the loss and accuracy with a TensorFlow/Keras model. The architecture was as follows:
+
+1. Flattening layer with input shape (32,32,3)
+2. Dense (hidden) layer with ReLU as activation function and 16 nodes
+3. Dense (output) Layer with softmax as activation function and 10 nodes, one for each class.
+
+The models were trained on the cifar10 dataset from TensorFlow. The models ran for 5 epochs. The loss for each epoch were quite similar. The accuracy of the TensorFlow model was slightly more consistent for each test round and performed generally sligtly better. The accuracy of the TensorFlow model was, after 5 epochs, between $0.08$ and $0.11$. My model performed less consistent and showed accuracies ranging from $0.01$ to $0.10$.
+
+**This may be due to the initialization of the matrices.**
 
 ## Recurrent Neural Network (RNN) Layer
 
@@ -88,3 +103,4 @@ $$\nabla_{\boldsymbol{h}^{(t)}} L = \boldsymbol{h}^{(t)} (\nabla_{\boldsymbol{o}
 The gradient for the next layer is 
 
 ## Long-Short-Term-Memory (LSTM) Layer
+Check correctness with TF
