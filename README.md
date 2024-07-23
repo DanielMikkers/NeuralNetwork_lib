@@ -104,6 +104,6 @@ The gradient w.r.t. $\boldsymbol{o}^{(t)}$ is the 'regular' gradient of $L$. The
 
 $$\nabla_{\boldsymbol{h}^{(t)}} L = \boldsymbol{h}^{(t)} (\nabla_{\boldsymbol{o}^{(t)}} L) \cdot V $$
 
-The gradient for the next layer is 
+The gradient for the next layer is ...
 
 ## Long-Short-Term-Memory (LSTM) Layer
