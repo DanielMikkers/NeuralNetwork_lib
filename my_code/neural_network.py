@@ -7,11 +7,13 @@ from terminaltables import AsciiTable
 from .optimizer import SGD
 import time
 
+#dictionary of loss functions, to assign later to variables
 loss_functions = {
     'mean_square_error': (MeanSquareError().loss, MeanSquareError().accuracy, MeanSquareError().gradient),
     'cross_entropy': (CrossEntropy().loss, CrossEntropy().accuracy, CrossEntropy().gradient)
 }
 
+#dictionary of optimizers
 optimizer_dict = {
     'SGD': SGD()
 }
@@ -39,6 +41,7 @@ class Sequential:
             layer.trainable = trainable
         
     def add_layer(self, layer): 
+        #function to add layers one by one to the model
         if self.layers:
             layer.set_input_shape(shape=self.layers[-1].output_shape())
         
@@ -48,6 +51,7 @@ class Sequential:
         self.layers.append(layer)
     
     def test_batch(self, x, y_true):
+        #test batch for accuracy and loss
         y_pred = self._forward(x)
         loss = np.mean(self.loss_func(y_true, y_pred))
         accuracy = self.accuracy_func(y_true, y_pred)
@@ -55,6 +59,7 @@ class Sequential:
         return loss, accuracy
     
     def train_batch(self, x, y_true):
+        #train batch to update weights, and obtain loss and accuracy
         y_pred = self._forward(x)
         
         loss = np.mean(self.loss_func(y_true, y_pred))
@@ -69,6 +74,7 @@ class Sequential:
     def fit(self, x, y_true, epochs, batch_size):
         i=1
         
+        #fit the model to the input data
         for _ in tqdm(range(epochs)):#, desc="Training", unit="epoch", ncols=75, colour='#37B6BD'):
             time.sleep(0.1)
 
@@ -96,6 +102,7 @@ class Sequential:
 
     
     def _forward(self, x):
+        #call the forward function of the layers
         layer_output = x
         for layer in self.layers:
             layer_output = layer.forward(layer_output)
@@ -103,11 +110,13 @@ class Sequential:
         return layer_output
     
     def _backward(self, loss_grad):
+        #call the backward function of the layers
         for layer in reversed(self.layers):
             loss_grad = layer.backward(loss_grad)
             
 
     def summary(self, name: str = "Model: "):
+        #print a summary of the model giving the layer types, number of parameters and the shapes
         Mod_Name = name + self.mod_name
         print(AsciiTable([[Mod_Name]]).table)
         
@@ -125,10 +134,13 @@ class Sequential:
         print("Total paramaters: %d \n" % tot_params)
     
     def predict(self, x):
+        #predict the output given input x
         return self._forward(x)
     
     def save_weights(self, file_name: str):
+        #TODO: function to save the weights to a file
         return 0
     
     def import_weights(self, file_name: str):
+        #TODO: function to import the weights to a fike
         return 0

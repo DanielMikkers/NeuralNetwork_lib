@@ -64,5 +64,5 @@ class ActivationFunction:
         return x / (np.absolute(x) + 1)
     
     def softsign_grad(self, x: Tensor, **kwargs) -> Tensor:
-        eps = 1e-15
+        eps = 1e-15 #to make sure that it doesn't blow up
         return 1 / (np.absolute(x) + 1) - np.power(x, 2) / (np.absolute(x+eps)*np.power((np.absolute(x) + 1),2))

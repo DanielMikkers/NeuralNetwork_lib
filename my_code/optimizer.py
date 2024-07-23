@@ -11,6 +11,7 @@ class SGD():
         if self.dw is None:
             self.dw = np.zeros(np.shape(w))
 
+        #update weights according to updating rule including momentum
         self.dw = self.momentum * self.dw + (1 - self.momentum) * grad_w
         return w - self.learning_rate * self.dw
 

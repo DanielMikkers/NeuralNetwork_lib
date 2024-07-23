@@ -22,7 +22,8 @@ class Layer(object):
     
     def output_shape(self):
         raise NotImplementedError
-    
+
+# dictionary of activation function to make calling them easier when a string is given  
 activation_function = {
     'softmax': (ActivationFunction().softmax, ActivationFunction().softmax_grad),
     'sigmoid': (ActivationFunction().sigmoid, ActivationFunction().sigmoid_grad),
@@ -48,6 +49,7 @@ class Dense(Layer):
         self.activation_name = activation
 
     def initialize(self, optimizer):
+        # initialize the weights and the bias, and assign the activation function to variables
         limit = 1 / np.sqrt(self.input_shape[0])
         self.w = np.random.uniform(-limit,limit, (self.input_shape[0], self.units))
         self.b = np.zeros((1,self.units))
@@ -58,12 +60,14 @@ class Dense(Layer):
         self.activation_func, self.activation_grad = activation_function[self.activation_name]
 
     def parameters(self):
+        # calculates the number of parameters in the layer
         if self.bias is False:
             return np.prod(np.shape(self.w))
         else:
             return np.prod(np.shape(self.w)) + np.prod(np.shape(self.b))
     
     def forward(self, inputs):
+        # forward function for dense layer
         self.layer_input = inputs
         if self.bias is False:
             output = inputs.dot(self.w)
@@ -72,8 +76,12 @@ class Dense(Layer):
         return self.activation_func(output)
     
     def backward(self, grad):
+        #backward function for dense layer
+
+        #the gradient w.r.t. the inside of the activation function
         grad_z = grad * self.activation_grad(self.layer_input.dot(self.w))
         
+        #updating the weights and biases
         if self.trainable:
             grad_w = self.layer_input.T.dot(grad_z)
             grad_b = np.sum(grad_z, axis=0, keepdims=True)
@@ -81,11 +89,13 @@ class Dense(Layer):
             self.w = self.w_opt.update(self.w, grad_w)
             self.b = self.b_opt.update(self.b, grad_b)
 
+        #set new gradient
         grad = grad_z.dot(self.w.T)
 
         return grad
     
     def output_shape(self):
+        #returns the output shape to use for other layers
         return (self.units,)
 
 class RNN(Layer):
@@ -104,6 +114,7 @@ class RNN(Layer):
         self.activation_name = activation
     
     def initialize(self, optimizer):
+        #initialize the weights matrices and biases for the RNN layer
         timesteps, input_dim = self.input_shape
 
         limit_dim = 1 / np.sqrt(self.input_dim)
@@ -120,15 +131,18 @@ class RNN(Layer):
         self.b_opt = copy.copy(optimizer)
         self.c_opt = copy.copy(optimizer)
 
+        #assigning the activation function to variables
         self.activation_func, self.activation_grad = activation_function[self.activation_name]
 
     def parameters(self):
+        #calculate the number of parameters
         if self.bias is False:
             return np.prod(self.W.shape) + np.prod(self.U.shape) + np.prod(self.V.shape)
         else:
             return np.prod(self.W.shape) + np.prod(self.U.shape) + np.prod(self.V.shape) + np.prod(self.b.shape) + np.prod(self.c.shape)
     
     def forward(self, inputs, training = True):
+        #forward function for the RNN layer
         self.layer_input = inputs
         batch_size, timesteps, input_dim = np.shape(inputs)
 
@@ -150,6 +164,7 @@ class RNN(Layer):
         return self.outputs
 
     def backward(self, grad):
+        #backward function for the RNN layer
         _, timesteps, _ = np.shape(grad)
 
         grad_U = np.zeros_like(self.U)
@@ -158,8 +173,10 @@ class RNN(Layer):
         grad_b = np.zeros_like(self.b)
         grad_c = np.zeros_like(self.c)
 
+        #the future gradient
         next_grad = np.zeros_like(grad)
 
+        #update the weights in reversed time
         for t in reversed(range(timesteps)):
             grad_V += grad[:, t].T.dot(self.states)
             grad_c += grad[:, t]
@@ -167,6 +184,7 @@ class RNN(Layer):
             grad_state = grad[:, t].dot(self.V) * self.activation_grad(self.state_input[:, t])
             next_grad[:, t] = grad_state.dot(self.U)
 
+            #make sure that the truncation is activated if needed
             for t_ in reversed(np.arange(max(0, t - self.bptt_trunc), t+1)):
                 grad_U += grad_state.T.dot(self.layer_input[:, t_])
                 grad_W += grad_state.T.dot(self.states[:, t_-1])
@@ -184,6 +202,7 @@ class RNN(Layer):
         return next_grad
 
     def output_shape(self):
+        #output shape to use for later layers
         return self.input_shape
 
 class Flatten(Layer):
@@ -193,11 +212,14 @@ class Flatten(Layer):
         self.input_shape = input_shape
 
     def forward(self, X, training=True):
+        #forward function of the flatten layer, which just reshapes the input
         self.prev_shape = X.shape
         return X.reshape((X.shape[0], -1))
 
-    def backward(self, accum_grad):
-        return accum_grad.reshape(self.prev_shape)
+    def backward(self, grad):
+        #backward function of the flatten layer, which just rehsapes the gradient
+        return grad.reshape(self.prev_shape)
 
     def output_shape(self):
+        #returns output shape to use for later layers
         return (np.prod(self.input_shape),)

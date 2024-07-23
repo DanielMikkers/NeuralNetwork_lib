@@ -107,4 +107,3 @@ $$\nabla_{\boldsymbol{h}^{(t)}} L = \boldsymbol{h}^{(t)} (\nabla_{\boldsymbol{o}
 The gradient for the next layer is 
 
 ## Long-Short-Term-Memory (LSTM) Layer
-Check correctness with TF

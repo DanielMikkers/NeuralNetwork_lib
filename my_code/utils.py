@@ -2,6 +2,7 @@ from numpy import ndarray as Tensor
 import numpy as np
 
 def get_accuracy(y_true: Tensor, y_pred: Tensor):
+    #obtaun the accuracy of the model
     y_true_labels = np.argmax(y_true, axis=1)
     y_pred_labels = np.argmax(y_pred, axis=1)
     
@@ -25,6 +26,7 @@ def shuffle_data(x, y, seed=None):
     return x[idx], y[idx]
 
 def split_test_train(x, y, test_size=0.20, shuffle=True, seed=None):
+    #split data into test and training set
     if shuffle:
         x, y = shuffle_data(x, y, seed)
     
